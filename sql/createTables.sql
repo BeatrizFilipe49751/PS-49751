@@ -1,3 +1,5 @@
+begin transaction;
+
 -- Gender Enum
 CREATE TYPE gender_type AS ENUM (
     'Masculino',
@@ -5,7 +7,7 @@ CREATE TYPE gender_type AS ENUM (
 );
 
 -- User Table
-CREATE TABLE User (
+CREATE TABLE Users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -28,14 +30,14 @@ CREATE TYPE identifier_type AS ENUM (
 -- Identifier Table
 CREATE TABLE Identifier (
     id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES User(id) ON DELETE CASCADE,
-    type identifier_type NOT NULL,
+    user_id INT REFERENCES Users(id) ON DELETE CASCADE,
+    type identifier_type NOT NULL
 );
 
 -- CV Table
 CREATE TABLE CV (
     id SERIAL PRIMARY KEY,
-    user_id INT UNIQUE REFERENCES User(id) ON DELETE CASCADE,
+    user_id INT UNIQUE REFERENCES Users(id) ON DELETE CASCADE,
     summary TEXT
 );
 
@@ -211,3 +213,5 @@ CREATE TABLE Website (
     type website_type NOT NULL,
     url TEXT NOT NULL
 );
+
+end transaction;
