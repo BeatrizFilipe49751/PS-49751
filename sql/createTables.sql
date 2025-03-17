@@ -111,13 +111,6 @@ CREATE TABLE Production (
     description TEXT
 );
 
--- Production Authors (Multivalue Attribute)
-CREATE TABLE ProductionAuthors (
-    production_id INT REFERENCES Production(id) ON DELETE CASCADE,
-    citationName VARCHAR(255) NOT NULL,
-    PRIMARY KEY (production_id, citationName)
-);
-
 -- Funding Type Enum
 CREATE TYPE funding_type AS ENUM ('Bolsa', 'Outro', 'Projeto');
 
@@ -135,17 +128,29 @@ CREATE TABLE Project (
     role VARCHAR(255)
 );
 
--- Project Authors (Multivalue Attribute)
-CREATE TABLE ProjectAuthors (
-    project_id INT REFERENCES Project(id) ON DELETE CASCADE,
-    citationName VARCHAR(255) NOT NULL,
-    PRIMARY KEY (project_id, citationName)
-);
-
 CREATE TABLE Project_Production (
     project_id INT REFERENCES Project(id) ON DELETE CASCADE,
     production_id INT REFERENCES Production(id) ON DELETE CASCADE,
     PRIMARY KEY (project_id, production_id)
+);
+
+-- Author Table
+CREATE TABLE Author (
+    id SERIAL PRIMARY KEY,
+    citationName VARCHAR(255) NOT NULL,
+    user_id INT REFERENCES Users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Project_Author (
+    project_id INT REFERENCES Project(id) ON DELETE CASCADE,
+    author_id INT REFERENCES Author(id) ON DELETE CASCADE,
+    PRIMARY KEY (project_id, author_id)
+);
+
+CREATE TABLE Production_Author (
+    production_id INT REFERENCES Production(id) ON DELETE CASCADE,
+    author_id INT REFERENCES Author(id) ON DELETE CASCADE,
+    PRIMARY KEY (production_id, author_id)
 );
 
 -- Distinction Type Enum
