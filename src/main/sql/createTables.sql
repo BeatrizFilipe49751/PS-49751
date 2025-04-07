@@ -1,11 +1,5 @@
 begin transaction;
 
--- Gender Enum
-CREATE TYPE gender_type AS ENUM (
-    'Masculino',
-    'Feminino'
-);
-
 -- User Table
 CREATE TABLE Users (
     id SERIAL PRIMARY KEY,
@@ -13,7 +7,7 @@ CREATE TABLE Users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     birthdate DATE NOT NULL,
-    gender gender_type NOT NULL,
+    gender VARCHAR(10) NOT NULL,
     cienciaID VARCHAR(255) UNIQUE
 );
 
@@ -32,6 +26,15 @@ CREATE TABLE Identifier (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES Users(id) ON DELETE CASCADE,
     type identifier_type NOT NULL
+);
+
+-- UserToken Table
+create table UserToken (
+	id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
+    token VARCHAR(512) NOT NULL UNIQUE,
+    issued_at TIMESTAMP NOT NULL,
+    expires_at TIMESTAMP NOT NULL
 );
 
 -- CV Table
@@ -60,7 +63,7 @@ CREATE TABLE Education (
 -- Thesis Table
 CREATE TABLE Thesis (
     id SERIAL PRIMARY KEY,
-    cv_id INT REFERENCES CV(id) ON DELETE CASCADE,
+    education_id INT REFERENCES Education(id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL
 );
 
@@ -217,6 +220,16 @@ CREATE TABLE Website (
     contact_id INT REFERENCES Contact(id) ON DELETE CASCADE,
     type website_type NOT NULL,
     url TEXT NOT NULL
+);
+
+CREATE TABLE Language (
+    id SERIAL PRIMARY KEY,
+    cv_id INT REFERENCES CV(id) ON DELETE CASCADE,
+    language VARCHAR(100) NOT NULL,
+    comprehension INT CHECK (comprehension BETWEEN 0 AND 5),
+    reading INT CHECK (reading BETWEEN 0 AND 5),
+    speaking INT CHECK (speaking BETWEEN 0 AND 5),
+    writing INT CHECK (writing BETWEEN 0 AND 5)
 );
 
 end transaction;
