@@ -4,40 +4,37 @@ import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import ps.project.domain.*
+import org.springframework.web.reactive.function.client.WebClient
+import ps.project.domain.auth.User
+import ps.project.domain.auth.UserDTO
+import ps.project.domain.auth.UserLoginDTO
+import ps.project.domain.auth.UserToken
 import ps.project.repository.UserRepository
 import ps.project.repository.UserTokenRepository
-import java.time.LocalDate
+import java.io.ByteArrayInputStream
 import java.time.LocalDateTime
 import java.util.*
+import javax.xml.parsers.DocumentBuilderFactory
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
     private val userTokenRepository: UserTokenRepository,
-    private val passwordEncoder: BCryptPasswordEncoder
+    private val passwordEncoder: BCryptPasswordEncoder,
+    private val webClient: WebClient
 ) {
 
     fun registerUser(userDTO: UserDTO): User {
         if (userRepository.findUserByEmail(userDTO.email).isPresent) {
-            throw Exception("User already exists") // TODO: Improve exception
+            throw Exception("User already exists")
         }
         val password = passwordEncoder.encode(userDTO.password)
-        val birthdate = LocalDate.parse(userDTO.birthdate)
-        val gender = userDTO.gender.uppercase()
-
-        val user = User(
-            name = userDTO.name,
-            email = userDTO.email,
-            password = password,
-            birthdate = birthdate,
-            gender = gender,
-            cienciaID = userDTO.cienciaID
-        )
+        val fullName = fetchFullNameFromCienciaVitae(userDTO.cienciaID)
+        val user = User(name = fullName, email = userDTO.email, password = password, cienciaID = userDTO.cienciaID)
         return userRepository.save(user)
     }
 
-    fun loginUser(userLoginDTO: UserLoginDTO): String {
+    fun loginUser(userLoginDTO: UserLoginDTO): UserToken {
         val user = userRepository.findUserByEmail(userLoginDTO.email)
             .orElseThrow { BadCredentialsException("Invalid email") }
 
@@ -53,36 +50,33 @@ class UserService(
         userTokenRepository.deleteByToken(token)
     }
 
-    private fun generateToken(user: User): String {
+    private fun generateToken(user: User): UserToken {
         val token = UUID.randomUUID().toString()
         val issuedAt = LocalDateTime.now()
-        val expiresAt = issuedAt.plusDays(1) // 24 hours
-
-        val userToken = UserToken(
-            user = user,
-            token = token,
-            issuedAt = issuedAt,
-            expiresAt = expiresAt
-        )
-
+        val expiresAt = issuedAt.plusDays(1)
+        val userToken = UserToken(user = user, token = token, issuedAt = issuedAt, expiresAt = expiresAt)
         userTokenRepository.save(userToken)
-
-        return token
+        return userToken
     }
 
-    fun validateToken(token: String): User? {
-        val userToken = userTokenRepository.findByToken(token)
-            .orElseThrow { BadCredentialsException("Invalid or expired token") }
+    private fun fetchFullNameFromCienciaVitae(cienciaID: String): String {
+        val url = "http://localhost:8080/api/v1.1/curriculum/$cienciaID/person-info"
 
-        if (userToken.expiresAt.isBefore(LocalDateTime.now())) {
-            userTokenRepository.delete(userToken)
-            throw BadCredentialsException("Token expired")
+        val responseXml = webClient.get()
+            .uri(url)
+            .retrieve()
+            .bodyToMono(String::class.java)
+            .block() ?: throw Exception("Empty response from CiênciaVitae")
+
+        val document = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder()
+            .parse(ByteArrayInputStream(responseXml.toByteArray(Charsets.UTF_8)))
+
+        val nodeList = document.getElementsByTagName("person-info:full-name")
+        return if (nodeList.length > 0) {
+            nodeList.item(0).textContent
+        } else {
+            throw Exception("Nome não encontrado na resposta da CiênciaVitae.")
         }
-
-        return userToken.user
-    }
-
-    fun findUserByEmail(email: String): User? {
-        return userRepository.findUserByEmail(email).orElse(null)
     }
 }

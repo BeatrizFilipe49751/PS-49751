@@ -21,9 +21,8 @@ class Security (
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers("/api/users/register").permitAll()
-                it.requestMatchers("/api/users/login").permitAll()
-                it.requestMatchers("/api/users/logout").authenticated().anyRequest().permitAll()
+                it.requestMatchers("/api/users/register", "/api/users/login").permitAll()
+                it.requestMatchers("/api/users/logout", "/api/cv/**").authenticated().anyRequest().permitAll()
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
 
