@@ -12,5 +12,8 @@ data class LattesCVModel(
     val lattesIdentifier: String? = null,
 
     @JacksonXmlProperty(localName = "PRODUCAO-TECNICA")
-    val production: TechnicalProduction? = null,
+    val technicalProduction: TechnicalProduction? = null,
+
+    @JacksonXmlProperty(localName = "PRODUCAO-BIBLIOGRAFICA")
+    val bibliographicProduction: BibliographicProduction? = null
 )

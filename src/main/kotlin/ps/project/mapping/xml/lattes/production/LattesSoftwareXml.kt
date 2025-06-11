@@ -17,20 +17,23 @@ data class LattesSoftwareXml(
 )
 
 data class BasicDataSoftwareXml(
-    @JacksonXmlProperty(localName = "TITULO-DO-SOFTWARE")
+    @JacksonXmlProperty(isAttribute = true, localName = "TITULO-DO-SOFTWARE")
     val title: String,
 
-    @JacksonXmlProperty(localName = "ANO")
-    val ano: Int,
+    @JacksonXmlProperty(isAttribute = true, localName = "ANO")
+    val year: Int,
 
-    @JacksonXmlProperty(localName = "DOI")
+    @JacksonXmlProperty(isAttribute = true, localName = "DOI")
     val doi: String? = null,
 
-    @JacksonXmlProperty(localName = "HOME-PAGE-DO-TRABALHO")
+    @JacksonXmlProperty(isAttribute = true, localName = "HOME-PAGE-DO-TRABALHO")
     val url: String? = null
 )
 
 data class DetailsSoftwareXml(
     @JacksonXmlProperty(localName = "PLATAFORMA")
-    val platform: String?
+    val platform: String?,
+
+    @JacksonXmlProperty(localName = "REGISTRO-OU-PATENTE")
+    val patent: LattesPatentXml? = null,
 )

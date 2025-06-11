@@ -14,18 +14,18 @@ data class LattesReportXml(
 )
 
 data class BasicDataReportXml(
-    @JacksonXmlProperty(localName = "NATUREZA")
+    @JacksonXmlProperty(isAttribute = true, localName = "NATUREZA")
     val type: String? = null,
 
-    @JacksonXmlProperty(localName = "TITULO-DO-TRABALHO-TECNICO")
+    @JacksonXmlProperty(isAttribute = true, localName = "TITULO-DO-TRABALHO-TECNICO")
     val title: String,
 
-    @JacksonXmlProperty(localName = "ANO")
-    val ano: Int,
+    @JacksonXmlProperty(isAttribute = true, localName = "ANO")
+    val year: Int,
 
-    @JacksonXmlProperty(localName = "DOI")
+    @JacksonXmlProperty(isAttribute = true, localName = "DOI")
     val doi: String? = null,
 
-    @JacksonXmlProperty(localName = "HOME-PAGE-DO-TRABALHO")
+    @JacksonXmlProperty(isAttribute = true, localName = "HOME-PAGE-DO-TRABALHO")
     val url: String? = null
 )

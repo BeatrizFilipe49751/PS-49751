@@ -142,11 +142,11 @@ CREATE TABLE Production (
     isbn VARCHAR(255),
     url VARCHAR(255),
     secondary_title VARCHAR(255),
-    volume INT,
+    volume VARCHAR(255),
     version VARCHAR(255),
     platform VARCHAR(255),
-    page_from INT,
-    page_to INT
+    page_from VARCHAR(255),
+    page_to VARCHAR(255)
 );
 
 -- Funding Type Enum

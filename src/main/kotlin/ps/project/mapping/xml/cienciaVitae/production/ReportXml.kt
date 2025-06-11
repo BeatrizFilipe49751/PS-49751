@@ -8,7 +8,7 @@ data class ReportXml(
     @JacksonXmlProperty(localName = "report-title")
     val reportTitle: String,
 
-    val volume: Int? = null,
+    val volume: String? = null,
 
     @JacksonXmlProperty(localName = "date-submitted")
     val date: DateXml,

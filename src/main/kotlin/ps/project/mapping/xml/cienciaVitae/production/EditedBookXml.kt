@@ -7,7 +7,7 @@ data class EditedBookXml (
     @JacksonXmlProperty(localName = "title")
     val title: String,
 
-    val volume: Int? = null,
+    val volume: String? = null,
 
     @JacksonXmlProperty(localName = "publication-year")
     val year: Int,

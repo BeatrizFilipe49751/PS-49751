@@ -10,13 +10,13 @@ data class JournalArticleXml(
 
     val journal: String? = null,
 
-    val volume: Int? = null,
+    val volume: String? = null,
 
     @JacksonXmlProperty(localName = "page-range-from")
-    val pageFrom: Int? = null,
+    val pageFrom: String? = null,
 
     @JacksonXmlProperty(localName = "page-range-to")
-    val pageTo: Int? = null,
+    val pageTo: String? = null,
 
     @JacksonXmlProperty(localName = "publication-date")
     val date: DateXml,

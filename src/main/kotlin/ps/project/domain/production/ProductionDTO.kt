@@ -14,11 +14,11 @@ data class ProductionDTO(
     val isbn: String? = null,
     val url: String? = null,
     val secondaryTitle: String? = null,
-    val volume: Int? = null,
+    val volume: String? = null,
     val version: String? = null,
     val platform: String? = null,
-    val pageFrom: Int? = null,
-    val pageTo: Int? = null,
+    val pageFrom: String? = null,
+    val pageTo: String? = null,
     val authors: List<String> = emptyList()
 ){
     fun toEntity(cv: Cv) = Production (

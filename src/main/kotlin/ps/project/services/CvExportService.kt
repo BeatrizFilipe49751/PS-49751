@@ -182,7 +182,7 @@ class CvExportService(
     private fun sendEducationsToCienciaVitae(educations: List<Education>, baseUrl: String) {
         educations.forEach {
             val payload = EducationXml(
-                degreeType = CodeValueXml(it.degree.code),
+                degreeType = CodeValueXml(it.degree.code, it.degree.value),
                 degreeCode = CodeValueXml(null, it.courseCode),
                 degreeName = it.course,
                 institutions = buildInstitutionXml(it.institution)!!,
@@ -248,14 +248,10 @@ class CvExportService(
     }
 
     private fun sendProductionsToCienciaVitae(productions: List<Production>, baseUrl: String) {
-        val outputs = productions.map {
-            buildDetailedOutputBlock(it)
+        productions.forEach {
+            val payload = buildDetailedOutputBlock(it)
+            postToCienciaVitae(baseUrl, "output", payload, "production")
         }
-        val payload = OutputsXml(
-            total = productions.size,
-            output = outputs
-        )
-        postToCienciaVitae(baseUrl, "outputs", payload, "production")
     }
 
     private fun buildDetailedOutputBlock(it: Production): OutputXml {

@@ -48,7 +48,7 @@ data class Production(
     val secondaryTitle: String? = null,
 
     @Column(name= "volume", nullable = true)
-    val volume: Int? = null,
+    val volume: String? = null,
 
     @Column(name= "version", nullable = true)
     val version: String? = null,
@@ -57,8 +57,8 @@ data class Production(
     val platform: String? = null,
 
     @Column(name= "page_from", nullable = true)
-    val pageFrom: Int? = null,
+    val pageFrom: String? = null,
 
     @Column(name= "page_to", nullable = true)
-    val pageTo: Int? = null,
+    val pageTo: String? = null,
 )

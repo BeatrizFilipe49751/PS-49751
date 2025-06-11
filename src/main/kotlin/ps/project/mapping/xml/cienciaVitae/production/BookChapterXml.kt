@@ -11,13 +11,13 @@ data class BookChapterXml(
     val secondaryTitle: String? = null,
 
     @JacksonXmlProperty(localName = "book-volume")
-    val volume: Int? = null,
+    val volume: String? = null,
 
     @JacksonXmlProperty(localName = "chapter-page-range-from")
-    val pageFrom: Int? = null,
+    val pageFrom: String? = null,
 
     @JacksonXmlProperty(localName = "chapter-page-range-to")
-    val pageTo: Int? = null,
+    val pageTo: String? = null,
 
     @JacksonXmlProperty(localName = "publication-year")
     val year: Int,
