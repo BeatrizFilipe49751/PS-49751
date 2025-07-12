@@ -1,0 +1,113 @@
+.form-page {
+    background-color: #dee5d7;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-box {
+    display: flex;
+    width: 800px;
+    max-width: 95vw;
+    height: 500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.form-box.reverse {
+    flex-direction: row-reverse;
+}
+
+.form-side {
+    flex: 1;
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-main {
+    background-color: white;
+}
+
+.form-main h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.form-secondary {
+    background-color: #457d58;
+    color: white;
+    text-align: center;
+}
+
+.form-secondary h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-secondary p {
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.side-button {
+    background-color: #fff;
+    color: #457d58;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    max-width: 150px;
+    margin: 0 auto;
+}
+
+.side-button:hover {
+    background-color: #f1f1f1;
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.form-content label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.form-content input {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-top: 0.3rem;
+    font-size: 0.95rem;
+}
+
+.submit-button {
+    background-color: #7d9b76;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    align-self: center;
+    max-width: 150px;
+    margin-top: 1.2rem;
+}
+
+.submit-button:hover {
+    background-color: #6c8867;
+}

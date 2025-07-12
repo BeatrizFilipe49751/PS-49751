@@ -1,0 +1,30 @@
+.cv-section {
+    background: white;
+    padding: 1.2rem 2rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.cv-section-title {
+    color: #457d58;
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 0 0 0.3rem 0; /* top margin = 0, bottom margin = 1rem */
+    line-height: 1.2;
+}
+
+
+.cv-section-content > div {
+    padding: 0.5rem 0;
+    border-bottom: 2px solid #ddd;
+}
+
+.cv-section-content > div:last-child {
+    border-bottom: none;
+}

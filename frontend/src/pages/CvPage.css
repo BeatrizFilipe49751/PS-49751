@@ -1,0 +1,30 @@
+.cv-main-container {
+    margin-left: 5%;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.cv-content-wrapper {
+    max-width: 800px;
+    width: 100%;
+}
+
+.cv-entry:not(:last-child) {
+    margin-bottom: 0.5rem;
+}
+
+.cv-entry
+
+.cv-subfields {
+    margin-left: 1rem;
+    padding-left: 1rem;
+    border-left: 2px solid #e0e0e0;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.cv-subfields p,
+.cv-entry > div {
+    margin-bottom: 0.5rem;
+}
