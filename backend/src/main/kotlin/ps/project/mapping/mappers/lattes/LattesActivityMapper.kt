@@ -7,9 +7,11 @@ import ps.project.domain.activity.DegreeType
 import ps.project.domain.education.SupervisorRole
 import ps.project.mapping.xml.lattes.LattesCVModel
 import ps.project.mapping.xml.lattes.ProfessionalActivity
+import ps.project.mapping.xml.lattes.activities.LattesConsultingXml
 import ps.project.mapping.xml.lattes.activities.LattesEventXml
 import ps.project.mapping.xml.lattes.activities.LattesJuryParticipation
 import ps.project.mapping.xml.lattes.activities.LattesJuryParticipationWrapper
+import ps.project.mapping.xml.lattes.activities.LattesTeachingXml
 import ps.project.mapping.xml.lattes.activities.supervision.LattesSupervisionBasicDataXml
 import ps.project.mapping.xml.lattes.activities.supervision.LattesSupervisionDetailsXml
 import ps.project.mapping.xml.lattes.activities.supervision.LattesSupervisionsXml
@@ -18,10 +20,6 @@ import java.time.LocalDate
 @Component
 class LattesActivityMapper {
     fun extractActivities(cv: LattesCVModel): List<ActivityDTO> = sequence {
-        cv.generalData?.professionalActivities?.activities?.let {
-            yieldAll(extractConsulting(it))
-            yieldAll(extractTeachingActivities(it))
-        }
         cv.complementaryData?.complementaryEducation?.juryParticipation?.let { juryParticipation ->
             yieldAll(extractJuryParticipationActivities(juryParticipation))
         }
@@ -33,41 +31,50 @@ class LattesActivityMapper {
         }
     }.toList()
 
-    private fun extractConsulting(profActivities: List<ProfessionalActivity>): List<ActivityDTO> {
-        val activities = mutableListOf< ActivityDTO>()
-        profActivities.forEach { profActivity ->
-            profActivity.consultingActivities?.consultingActivities?.forEach { consulting ->
-                val endDate = consulting.endYear?.let { toDate(year = it, month = consulting.endMonth) }
-                activities.add(
-                    ActivityDTO(
-                        title = consulting.title,
-                        date = toDate(year = consulting.startYear, month = consulting.startMonth),
-                        endDate = endDate,
-                        type = ActivityType.Consulting
-                    )
-                )
-            }
+    fun extractActivitiesFromProfExp(profActivity: ProfessionalActivity): List<ActivityDTO> {
+        val activities = mutableListOf<ActivityDTO>()
+        val consultingActivities = profActivity.consultingActivities?.consultingActivities
+        if (consultingActivities != null) {
+            extractConsulting(consultingActivities).let { activities.addAll(it) }
+        }
+        val teachingActivities = profActivity.teachingActivities?.teachingActivities
+        if (teachingActivities != null) {
+            extractTeachingActivities(teachingActivities).let { activities.addAll(it) }
         }
         return activities
     }
 
-    private fun extractTeachingActivities(profActivities: List<ProfessionalActivity>): List<ActivityDTO> {
+    private fun extractConsulting(consultingActivities: List<LattesConsultingXml>): List<ActivityDTO> {
+        val activities = mutableListOf<ActivityDTO>()
+        consultingActivities.forEach { consulting ->
+            val endDate = consulting.endYear?.let { toDate(year = it, month = consulting.endMonth) }
+            activities.add(
+                ActivityDTO(
+                    title = consulting.title,
+                    date = toDate(year = consulting.startYear, month = consulting.startMonth),
+                    endDate = endDate,
+                    type = ActivityType.Consulting
+                )
+            )
+        }
+        return activities
+    }
+
+    private fun extractTeachingActivities(teachingActivities: List<LattesTeachingXml>): List<ActivityDTO> {
         val activities = mutableListOf< ActivityDTO>()
-        profActivities.forEach { profActivity ->
-            profActivity.teachingActivities?.teachingActivities?.forEach { teaching ->
-                teaching.subjects.forEach { subject ->
-                    val endDate = teaching.endYear?.let { toDate(year = it, month = teaching.endMonth) }
-                    activities.add(
-                        ActivityDTO(
-                            title = subject.name,
-                            date = toDate(year = teaching.startYear, month = teaching.startMonth),
-                            endDate = endDate,
-                            type = ActivityType.SubjectTaught,
-                            course = teaching.degree,
-                            courseCode = teaching.degreeCode
-                        )
+        teachingActivities.forEach { teaching ->
+            teaching.subjects.forEach { subject ->
+                val endDate = teaching.endYear?.let { toDate(year = it, month = teaching.endMonth) }
+                activities.add(
+                    ActivityDTO(
+                        title = subject.name,
+                        date = toDate(year = teaching.startYear, month = teaching.startMonth),
+                        endDate = endDate,
+                        type = ActivityType.SubjectTaught,
+                        course = teaching.degree,
+                        courseCode = teaching.degreeCode
                     )
-                }
+                )
             }
         }
         return activities

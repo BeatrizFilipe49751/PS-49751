@@ -21,12 +21,6 @@ import { mapValues } from '../runtime';
 export interface SupervisorDTO {
     /**
      * 
-     * @type {number}
-     * @memberof SupervisorDTO
-     */
-    id?: number;
-    /**
-     * 
      * @type {string}
      * @memberof SupervisorDTO
      */
@@ -69,7 +63,6 @@ export function SupervisorDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'role': json['role'],
     };
@@ -86,7 +79,6 @@ export function SupervisorDTOToJSONTyped(value?: SupervisorDTO | null, ignoreDis
 
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'role': value['role'],
     };

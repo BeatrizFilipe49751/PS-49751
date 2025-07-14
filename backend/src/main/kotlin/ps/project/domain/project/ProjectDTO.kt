@@ -23,9 +23,9 @@ data class ProjectDTO(
         startDate = startDate,
         endDate = endDate,
         description = description,
-        fundingType = fundingType,
+        fundingType = fundingType.name,
         identifier = identifier,
         role = role,
-        state = state
+        state = state?.name
     )
 }

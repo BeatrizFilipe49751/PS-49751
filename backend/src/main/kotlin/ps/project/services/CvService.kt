@@ -12,26 +12,38 @@ import ps.project.domain.activity.ActivityMapper
 import ps.project.domain.author.AuthorDTO
 import ps.project.domain.contact.Address
 import ps.project.domain.contact.AddressDTO
+import ps.project.domain.contact.ContactType
 import ps.project.domain.contact.EmailDTO
 import ps.project.domain.contact.Phone
 import ps.project.domain.contact.PhoneDTO
+import ps.project.domain.contact.PhoneDevice
 import ps.project.domain.contact.WebsiteDTO
+import ps.project.domain.contact.WebsiteType
 import ps.project.domain.distinction.Distinction
 import ps.project.domain.distinction.DistinctionDTO
+import ps.project.domain.distinction.DistinctionType
 import ps.project.domain.education.Education
 import ps.project.domain.education.EducationDTO
+import ps.project.domain.education.EducationDegree
+import ps.project.domain.education.EducationStatus
 import ps.project.domain.education.SupervisorDTO
+import ps.project.domain.education.SupervisorRole
 import ps.project.domain.production.ThesisDTO
 import ps.project.domain.identifier.IdentifierDTO
+import ps.project.domain.identifier.IdentifierType
 import ps.project.domain.language.Language
 import ps.project.domain.language.LanguageDTO
+import ps.project.domain.language.LanguageLevel
 import ps.project.domain.production.Production
 import ps.project.domain.production.ProductionDTO
 import ps.project.domain.production.ProductionMapper
+import ps.project.domain.profExp.ProfExpMapper
 import ps.project.domain.profExp.ProfessionalExperience
 import ps.project.domain.profExp.ProfessionalExperienceDTO
+import ps.project.domain.project.FundingType
 import ps.project.domain.project.Project
 import ps.project.domain.project.ProjectDTO
+import ps.project.domain.project.ProjectState
 import ps.project.domain.utils.hasCvData
 import ps.project.repository.*
 
@@ -55,7 +67,13 @@ class CvService(
         exportService.sendCvToCienciaVitae(user, baseUrl)
     }
 
+    @Transactional
     fun updateCv(token: String, cvDTO: CvDTO) {
+        val user = getUserFromToken(token)
+        if (!user.hasCvData()) {
+            throw IllegalArgumentException("The user does not have CV data to update.")
+        }
+        persistenceService.updateCvFromDto(cvDTO, user)
     }
 
     @Transactional
@@ -85,13 +103,13 @@ class CvService(
     private fun toDTO(user: User): CvDTO {
         return CvDTO(
             summary = user.summary,
-            identifiers = user.identifiers.map { IdentifierDTO(it.id, it.type) },
+            identifiers = user.identifiers.map { IdentifierDTO(it.id, IdentifierType.valueOf(it.type)) },
             languages = languagesToDTO(user.languages),
             distinctions = distinctionsToDTO(user.distinctions),
             addresses = addressesToDTO(user.addresses),
-            emails = user.emails.map { EmailDTO(it.id, it.type, it.address) },
+            emails = user.emails.map { EmailDTO(it.id, ContactType.valueOf(it.type), it.address) },
             phones = phonesToDTO(user.phones),
-            websites = user.websites.map { WebsiteDTO(it.id, it.type, it.url) },
+            websites = user.websites.map { WebsiteDTO(it.id, WebsiteType.valueOf(it.type), it.url) },
             educations = educationsToDTO(user.educations),
             projects = projectsToDTO(user.projects),
             productions = productionsToDTO(user.productions),
@@ -104,17 +122,24 @@ class CvService(
         return languages.map {
             LanguageDTO(it.id,
                 it.language,
-                it.comprehension,
-                it.reading,
-                it.speaking,
-                it.writing)
+                mapLanguageLevel(it.comprehension),
+                mapLanguageLevel(it.reading),
+                mapLanguageLevel(it.speaking),
+                mapLanguageLevel(it.writing))
+        }
+    }
+    private fun mapLanguageLevel(level: String?): LanguageLevel? {
+        return if (level == null) {
+            null
+        } else {
+            LanguageLevel.valueOf(level)
         }
     }
     private fun distinctionsToDTO(distinctions: List<Distinction>): List<DistinctionDTO> {
         return distinctions.map {
             DistinctionDTO(
                 id = it.id,
-                type = it.type,
+                type = DistinctionType.valueOf(it.type),
                 name = it.name,
                 year = it.year,
                 promotingEntity = it.promotingEntity
@@ -125,7 +150,7 @@ class CvService(
         return addresses.map {
             AddressDTO(
                 id = it.id,
-                type = it.type,
+                type = ContactType.valueOf(it.type),
                 address = it.address,
                 zipCode = it.zipCode,
                 locality = it.locality,
@@ -138,10 +163,10 @@ class CvService(
         return phones.map {
             PhoneDTO(
                 id = it.id,
-                type = it.type,
+                type = ContactType.valueOf(it.type),
                 number = it.number,
                 countryCode = it.countryCode,
-                device = it.device
+                device = PhoneDevice.valueOf(it.device)
             )
         }
     }
@@ -153,16 +178,16 @@ class CvService(
                     title = thesis.title,
                     date = thesis.date,
                     supervisors = thesis.supervisors.map { supervisor ->
-                        SupervisorDTO(supervisor.id.name, supervisor.role) }
+                        SupervisorDTO(supervisor.id.name, SupervisorRole.valueOf(supervisor.role)) }
                 )
             }
             EducationDTO(
                 id = it.id,
-                degree = it.degree,
+                degree = EducationDegree.valueOf(it.degree),
                 course = it.course,
                 institution = it.institution,
                 classification = it.classification,
-                status = it.status,
+                status = EducationStatus.valueOf(it.status),
                 courseCode = it.courseCode,
                 startDate = it.startDate,
                 endDate = it.endDate,
@@ -179,10 +204,10 @@ class CvService(
                 startDate = it.startDate,
                 endDate = it.endDate,
                 description = it.description,
-                fundingType = it.fundingType,
+                fundingType = FundingType.valueOf(it.fundingType),
                 identifier = it.identifier,
                 role = it.role,
-                state = it.state,
+                state = it.state?.let { state -> ProjectState.valueOf(state) },
                 authors = exportService.getProjectAuthors(it).map { author -> author.citationName }
             )
         }
@@ -199,16 +224,14 @@ class CvService(
         return prod
     }
     private fun profExpToDTO(profExp: List<ProfessionalExperience>): List<ProfessionalExperienceDTO> {
-        return profExp.map {
-            ProfessionalExperienceDTO(
-                id = it.id,
-                institution = it.institution,
-                role = it.role,
-                description = it.description,
-                startDate = it.startDate,
-                endDate = it.endDate
-            )
+        val profExperiences: MutableList<ProfessionalExperienceDTO> = mutableListOf()
+        profExp.forEach {
+            val profExpDTO = ProfExpMapper.toDTO(it)
+            if (profExpDTO != null) {
+                profExperiences.add(profExpDTO)
+            }
         }
+        return profExperiences
     }
     private fun activitiesToDTO(activities: List<Activity>): List<ActivityDTO> {
         val activity: MutableList<ActivityDTO> = mutableListOf()

@@ -13,7 +13,7 @@
  */
 
 
-export const BASE_PATH = "http://host.docker.internal:8081".replace(/\/+$/, "");
+export const BASE_PATH = "http://localhost:8081".replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path

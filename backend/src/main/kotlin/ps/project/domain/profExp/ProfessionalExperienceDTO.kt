@@ -1,6 +1,6 @@
 package ps.project.domain.profExp
 
-import ps.project.domain.User
+import ps.project.domain.activity.ActivityDTO
 import java.time.LocalDate
 
 data class ProfessionalExperienceDTO(
@@ -8,13 +8,7 @@ data class ProfessionalExperienceDTO(
     val institution: String,
     val description: String? = null,
     val startDate: LocalDate,
-    val endDate: LocalDate? = null
-) {
-    fun toEntity(user: User) = ProfessionalExperience (
-        user = user,
-        institution = institution,
-        description = description,
-        startDate = startDate,
-        endDate = endDate
-    )
-}
+    val endDate: LocalDate? = null,
+    val type: ProfExpType,
+    val activities: List<ActivityDTO>? = null,
+)

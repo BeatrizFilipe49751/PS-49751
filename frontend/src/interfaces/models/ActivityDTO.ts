@@ -30,33 +30,107 @@ export interface ActivityDTO {
      * @type {string}
      * @memberof ActivityDTO
      */
-    type: string;
+    type: ActivityDTOTypeEnum;
     /**
      * 
      * @type {string}
      * @memberof ActivityDTO
      */
-    description?: string;
+    title: string;
     /**
      * 
      * @type {Date}
      * @memberof ActivityDTO
      */
-    startDate: Date;
+    date: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof ActivityDTO
+     */
+    student?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ActivityDTO
+     */
+    institution?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ActivityDTO
+     */
+    course?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ActivityDTO
+     */
+    courseCode?: string;
     /**
      * 
      * @type {Date}
      * @memberof ActivityDTO
      */
     endDate?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof ActivityDTO
+     */
+    role?: ActivityDTORoleEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof ActivityDTO
+     */
+    degree?: ActivityDTODegreeEnum;
 }
+
+
+/**
+ * @export
+ */
+export const ActivityDTOTypeEnum = {
+    Consulting: 'Consulting',
+    Event: 'Event',
+    Supervision: 'Supervision',
+    AcademicJury: 'AcademicJury',
+    SubjectTaught: 'SubjectTaught'
+} as const;
+export type ActivityDTOTypeEnum = typeof ActivityDTOTypeEnum[keyof typeof ActivityDTOTypeEnum];
+
+/**
+ * @export
+ */
+export const ActivityDTORoleEnum = {
+    Supervisor: 'Supervisor',
+    CoSupervisor: 'CoSupervisor'
+} as const;
+export type ActivityDTORoleEnum = typeof ActivityDTORoleEnum[keyof typeof ActivityDTORoleEnum];
+
+/**
+ * @export
+ */
+export const ActivityDTODegreeEnum = {
+    Masters: 'MASTERS',
+    Doctorate: 'DOCTORATE',
+    Postdoc: 'POSTDOC',
+    Specialization: 'SPECIALIZATION',
+    Research: 'RESEARCH',
+    Bachelor: 'BACHELOR',
+    Other: 'OTHER'
+} as const;
+export type ActivityDTODegreeEnum = typeof ActivityDTODegreeEnum[keyof typeof ActivityDTODegreeEnum];
+
 
 /**
  * Check if a given object implements the ActivityDTO interface.
  */
 export function instanceOfActivityDTO(value: object): value is ActivityDTO {
     if (!('type' in value) || value['type'] === undefined) return false;
-    if (!('startDate' in value) || value['startDate'] === undefined) return false;
+    if (!('title' in value) || value['title'] === undefined) return false;
+    if (!('date' in value) || value['date'] === undefined) return false;
     return true;
 }
 
@@ -72,9 +146,15 @@ export function ActivityDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean
         
         'id': json['id'] == null ? undefined : json['id'],
         'type': json['type'],
-        'description': json['description'] == null ? undefined : json['description'],
-        'startDate': (new Date(json['startDate'])),
+        'title': json['title'],
+        'date': (new Date(json['date'])),
+        'student': json['student'] == null ? undefined : json['student'],
+        'institution': json['institution'] == null ? undefined : json['institution'],
+        'course': json['course'] == null ? undefined : json['course'],
+        'courseCode': json['courseCode'] == null ? undefined : json['courseCode'],
         'endDate': json['endDate'] == null ? undefined : (new Date(json['endDate'])),
+        'role': json['role'] == null ? undefined : json['role'],
+        'degree': json['degree'] == null ? undefined : json['degree'],
     };
 }
 
@@ -91,9 +171,15 @@ export function ActivityDTOToJSONTyped(value?: ActivityDTO | null, ignoreDiscrim
         
         'id': value['id'],
         'type': value['type'],
-        'description': value['description'],
-        'startDate': ((value['startDate']).toISOString().substring(0,10)),
+        'title': value['title'],
+        'date': ((value['date']).toISOString().substring(0,10)),
+        'student': value['student'],
+        'institution': value['institution'],
+        'course': value['course'],
+        'courseCode': value['courseCode'],
         'endDate': value['endDate'] == null ? undefined : ((value['endDate']).toISOString().substring(0,10)),
+        'role': value['role'],
+        'degree': value['degree'],
     };
 }
 

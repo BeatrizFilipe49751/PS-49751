@@ -10,15 +10,31 @@ import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.reactive.function.client.WebClient
 import ps.project.domain.User
+import ps.project.domain.activity.AcademicJury
+import ps.project.domain.activity.Activity
+import ps.project.domain.activity.ActivityType
+import ps.project.domain.activity.Consulting
+import ps.project.domain.activity.DegreeType
+import ps.project.domain.activity.Event
+import ps.project.domain.activity.SubjectTaught
+import ps.project.domain.activity.Supervision
 import ps.project.domain.author.Author
 import ps.project.domain.contact.Address
+import ps.project.domain.contact.ContactType
 import ps.project.domain.contact.Email
 import ps.project.domain.contact.Phone
+import ps.project.domain.contact.PhoneDevice
 import ps.project.domain.contact.Website
+import ps.project.domain.contact.WebsiteType
 import ps.project.domain.distinction.Distinction
+import ps.project.domain.distinction.DistinctionType
 import ps.project.domain.education.Education
+import ps.project.domain.education.EducationDegree
+import ps.project.domain.education.EducationStatus
+import ps.project.domain.education.SupervisorRole
 import ps.project.domain.production.Thesis
 import ps.project.domain.identifier.Identifier
+import ps.project.domain.identifier.IdentifierType
 import ps.project.domain.language.Language
 import ps.project.domain.language.LanguageLevel
 import ps.project.domain.production.Book
@@ -36,8 +52,23 @@ import ps.project.domain.production.ResearchTechnique
 import ps.project.domain.production.Software
 import ps.project.domain.production.Translation
 import ps.project.domain.production.WebsiteProd
+import ps.project.domain.profExp.Others
+import ps.project.domain.profExp.Positions
+import ps.project.domain.profExp.ProfExpType
+import ps.project.domain.profExp.ProfessionalExperience
+import ps.project.domain.profExp.Science
+import ps.project.domain.profExp.TeachingHE
+import ps.project.domain.project.FundingType
 import ps.project.domain.project.Project
+import ps.project.domain.project.ProjectState
 import ps.project.mapping.xml.cienciaVitae.*
+import ps.project.mapping.xml.cienciaVitae.activity.AcademicJuryXml
+import ps.project.mapping.xml.cienciaVitae.activity.ConsultingAdvisoryXml
+import ps.project.mapping.xml.cienciaVitae.activity.CourseTaughtXml
+import ps.project.mapping.xml.cienciaVitae.activity.EventAdministrationXml
+import ps.project.mapping.xml.cienciaVitae.activity.ServiceXml
+import ps.project.mapping.xml.cienciaVitae.activity.StudentXml
+import ps.project.mapping.xml.cienciaVitae.activity.SupervisionXml
 import ps.project.repository.ProductionAuthorRepository
 import ps.project.repository.ProjectAuthorRepository
 import ps.project.mapping.xml.cienciaVitae.common.CodeValueXml
@@ -52,6 +83,7 @@ import ps.project.mapping.xml.cienciaVitae.contacts.WebsiteXml
 import ps.project.mapping.xml.cienciaVitae.education.EducationXml
 import ps.project.mapping.xml.cienciaVitae.education.SupervisorXml
 import ps.project.mapping.xml.cienciaVitae.education.ThesisXml
+import ps.project.mapping.xml.cienciaVitae.profExp.EmploymentXml
 import ps.project.mapping.xml.cienciaVitae.project.*
 import java.time.LocalDate
 
@@ -78,15 +110,19 @@ class CvExportService(
         sendDistinctionsToCienciaVitae(user.distinctions, baseUrl)
         sendAuthorsToCienciaVitae(user.authors, baseUrl)
         sendEducationsToCienciaVitae(user.educations, baseUrl)
+        sendActivitiesToCienciaVitae(user.activities, baseUrl)
+        sendProfExperiencesToCienciaVitae(user.profExp, baseUrl)
         sendProjectsToCienciaVitae(user.projects, baseUrl)
         sendProductionsToCienciaVitae(user.productions, baseUrl)
     }
 
     private fun sendPhonesToCienciaVitae(phones: List<Phone>, baseUrl: String) {
         phones.forEach {
+            val device = PhoneDevice.valueOf(it.type)
+            val type = ContactType.valueOf(it.type)
             val payload = PhoneXml(
-                usageType = CodeValueXml(it.type.code, it.type.name),
-                phoneType = CodeValueXml(it.device.code.toString(), it.device.value),
+                usageType = CodeValueXml(type.code, type.name),
+                phoneType = CodeValueXml(device.code.toString(), device.value),
                 countryCode = it.countryCode,
                 number = it.number
             )
@@ -96,8 +132,9 @@ class CvExportService(
 
     private fun sendEmailsToCienciaVitae(emails: List<Email>, baseUrl: String) {
         emails.forEach {
+            val type = ContactType.valueOf(it.type)
             val payload = EmailXml(
-                emailType = CodeValueXml(it.type.code, it.type.name),
+                emailType = CodeValueXml(type.code, type.name),
                 email = it.address
             )
             postToCienciaVitae(baseUrl, "email", payload, "email")
@@ -126,8 +163,9 @@ class CvExportService(
 
     private fun sendWebsitesToCienciaVitae(websites: List<Website>, baseUrl: String) {
         websites.forEach {
+            val type = WebsiteType.valueOf(it.type)
             val payload = WebsiteXml(
-                siteType = CodeValueXml(it.type.code.toString(), it.type.value),
+                siteType = CodeValueXml(type.code.toString(), type.value),
                 url = it.url
             )
             postToCienciaVitae(baseUrl, "web-address", payload, "website")
@@ -136,8 +174,9 @@ class CvExportService(
 
     private fun sendAddressesToCienciaVitae(addresses: List<Address>, baseUrl: String) {
         addresses.forEach {
+            val type = ContactType.valueOf(it.type)
             val payload = AddressXml(
-                addressType = CodeValueXml(it.type.code, it.type.name),
+                addressType = CodeValueXml(type.code, type.name),
                 streetAddress = it.address,
                 postalCode = it.zipCode,
                 city = it.locality,
@@ -161,8 +200,9 @@ class CvExportService(
         }
     }
 
-    private fun buildLanguageXml(level: LanguageLevel?): CodeValueXml? {
-        return if (level != null) {
+    private fun buildLanguageXml(levelString: String?): CodeValueXml? {
+        return if (levelString != null) {
+            val level = LanguageLevel.valueOf(levelString)
             CodeValueXml(level.code, level.value)
         } else {
             null
@@ -171,8 +211,9 @@ class CvExportService(
 
     private fun sendIdentifiersToCienciaVitae(identifiers: List<Identifier>, baseUrl: String) {
         identifiers.forEach {
+            val type = IdentifierType.valueOf(it.type)
             val payload = IdentifierXml(
-                identifierType = CodeValueXml(it.type.name, it.type.value),
+                identifierType = CodeValueXml(type.name, type.value),
                 identifier = it.id
             )
             postToCienciaVitae(baseUrl, "author-identifier", payload, "identifier")
@@ -184,8 +225,9 @@ class CvExportService(
             val institutions = it.promotingEntity?.let { name ->
                 InstitutionsXml(institution = listOf(InstitutionXml(name = name)))
             }
+            val type = DistinctionType.valueOf(it.type)
             val payload = DistinctionXml(
-                distinctionType = CodeValueXml(code = it.type.code, value = it.type.value),
+                distinctionType = CodeValueXml(code = type.code, value = type.value),
                 distinctionName = it.name,
                 effectiveDate = it.year,
                 institutions = institutions
@@ -196,13 +238,15 @@ class CvExportService(
 
     private fun sendEducationsToCienciaVitae(educations: List<Education>, baseUrl: String) {
         educations.forEach {
+            val degree = EducationDegree.valueOf(it.degree)
+            val status = EducationStatus.valueOf(it.status)
             val payload = EducationXml(
-                degreeType = CodeValueXml(it.degree.code, it.degree.value),
+                degreeType = CodeValueXml(degree.code, degree.value),
                 degreeCode = CodeValueXml(null, it.courseCode),
                 degreeName = it.course,
                 institutions = buildInstitutionXml(it.institution)!!,
                 classification = it.classification,
-                degreeStatus = CodeValueXml(it.status.code.toString(), it.status.name),
+                degreeStatus = CodeValueXml(status.code.toString(), status.name),
                 startDate = buildDateXml(it.startDate),
                 endDate = buildDateXml(it.endDate) ?: DateXml(1,1,1),
                 thesis = buildThesisXml(it.thesis)
@@ -211,15 +255,118 @@ class CvExportService(
         }
     }
 
+    private fun sendActivitiesToCienciaVitae(activities: List<Activity>, baseUrl: String) {
+        activities.forEach {
+            val payload = buildDetailedActivityBlock(it)
+            if (payload is ServiceXml) {
+                postToCienciaVitae(baseUrl, "output", payload, "activity")
+            }
+        }
+    }
+
+    private fun buildDetailedActivityBlock(activity: Activity): ServiceXml? {
+        return when (activity) {
+            is Consulting -> {
+                val type = ActivityType.Consulting
+                ServiceXml(
+                    serviceCategory = CodeValueXml(type.code, type.value),
+                    consultingAdvisory = ConsultingAdvisoryXml (
+                        title = activity.title,
+                        startDate = buildDateXml(activity.date)!!,
+                        endDate = buildDateXml(activity.endDate),
+                    )
+                )
+            }
+            is AcademicJury -> {
+                val type = ActivityType.AcademicJury
+                val degree = DegreeType.valueOf(activity.degree)
+                ServiceXml(
+                    serviceCategory = CodeValueXml(type.code, type.value),
+                    academicJury = AcademicJuryXml(
+                        title = activity.title,
+                        date = buildDateXml(activity.date)!!,
+                        student = activity.candidate,
+                        degree = CodeValueXml(degree.code, degree.value),
+                        course = activity.course,
+                        institutions = buildInstitutionXml(activity.institution)
+                    )
+                )
+            }
+            is Event -> {
+                val type = ActivityType.Event
+                ServiceXml(
+                    serviceCategory = CodeValueXml(type.code, type.value),
+                    eventAdministration = EventAdministrationXml(
+                        title = activity.title,
+                        startDate = buildDateXml(activity.date)!!,
+                        institutions = buildInstitutionXml(activity.institution)
+                    )
+                )
+            }
+            is SubjectTaught -> {
+                val type = ActivityType.SubjectTaught
+                ServiceXml(
+                    serviceCategory = CodeValueXml(type.code, type.value),
+                    courseTaught = CourseTaughtXml(
+                        title = activity.title,
+                        startDate = buildDateXml(activity.date)!!,
+                        endDate = buildDateXml(activity.endDate),
+                        course = activity.course,
+                        courseCode = activity.courseCode
+                    )
+                )
+            }
+            is Supervision -> {
+                val type = ActivityType.Supervision
+                val role = SupervisorRole.valueOf(activity.role)
+                val degree = DegreeType.valueOf(activity.degree)
+                ServiceXml(
+                    serviceCategory = CodeValueXml(type.code, type.value),
+                    supervision = SupervisionXml(
+                        title = activity.title,
+                        startDate = buildDateXml(activity.date)!!,
+                        student = StudentXml(name = activity.supervisee, consent = false),
+                        course = activity.course,
+                        courseCode = activity.courseCode,
+                        supervisoryType = CodeValueXml(role.code, role.value),
+                        degree = CodeValueXml(degree.code, degree.value),
+                        institutions = buildInstitutionXml(activity.institution)
+                    )
+                )
+            }
+            else -> null
+        }
+    }
+
+    private fun sendProfExperiencesToCienciaVitae(profExp: List<ProfessionalExperience>, baseUrl: String) {
+        profExp.forEach {
+            val type = when (it) {
+                is Science -> ProfExpType.Science
+                is TeachingHE -> ProfExpType.TeachingHE
+                is Positions -> ProfExpType.Positions
+                is Others -> ProfExpType.Others
+                else -> ProfExpType.Others
+            }
+            val payload = EmploymentXml(
+                employmentCategory = CodeValueXml(type.code, type.value),
+                institution = InstitutionXml(name = it.institution),
+                startDate = buildDateXml(it.startDate)!!,
+                endDate = buildDateXml(it.endDate)
+            )
+            postToCienciaVitae(baseUrl, "employment", payload, "professional experience")
+        }
+    }
+
     private fun buildThesisXml(thesis: Thesis?): ThesisXml? {
         return thesis?.let {
             val supervisorsXml = if (it.supervisors.isNotEmpty()) {
                 val supervisors = mutableListOf<SupervisorXml>()
                 it.supervisors.forEach{supervisor ->
+                    val role = SupervisorRole.valueOf(supervisor.role)
                     supervisors.add(
                         SupervisorXml(
                             supervisorName = supervisor.id.name,
-                            supervisorRole = CodeValueXml(supervisor.role.code, supervisor.role.value)
+                            supervisorRole = CodeValueXml(role.code, role.value)
                         )
                     )
                 }
@@ -243,13 +390,15 @@ class CvExportService(
                     identifiers = listOf(FundingIdentifierXml(reference = id))
                 )
             }
+            val fundingType = FundingType.valueOf(it.fundingType)
+            val state = it.state?.let { state -> ProjectState.valueOf(state) }
             val payload = ProjectXml(
-                fundingCategory = CodeValueXml(it.fundingType.code, it.fundingType.name),
+                fundingCategory = CodeValueXml(fundingType.code, fundingType.name),
                 title = it.title,
                 description = it.description,
                 startDate = buildDateXml(it.startDate)!!,
                 endDate = buildDateXml(it.endDate),
-                status = CodeValueXml(it.state?.code, it.state?.name),
+                status = CodeValueXml(state?.code, state?.name),
                 role = CodeValueXml(null, it.role),
                 institution = buildInstitutionXml(it.institution),
                 fundingIdentifiers = fundingIdentifiers,

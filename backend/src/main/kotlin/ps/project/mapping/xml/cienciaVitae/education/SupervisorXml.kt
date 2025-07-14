@@ -7,6 +7,6 @@ data class SupervisorXml(
     @JacksonXmlProperty(localName = "supervisor-name")
     val supervisorName: String,
 
-    @JacksonXmlProperty(localName = "supervisorRole")
+    @JacksonXmlProperty(localName = "supervisor-role")
     val supervisorRole: CodeValueXml
 )

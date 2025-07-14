@@ -9,7 +9,7 @@ data class WebsiteDTO(
 ) {
     fun toEntity(user: User) = Website (
         user = user,
-        type = type,
+        type = type.name,
         url = url
     )
 }

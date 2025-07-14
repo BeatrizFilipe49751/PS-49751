@@ -1,5 +1,6 @@
 package ps.project.domain.activity
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import ps.project.domain.User
 import java.time.LocalDate
@@ -10,5 +11,6 @@ class Consulting(
     title: String,
     date: LocalDate,
 
-    val institution: String? = null,
+    @Column(name = "end_date")
+    val endDate: LocalDate? = null,
 ) : Activity(user = user, title = title, date = date)

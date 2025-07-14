@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { ActivityDTO } from './ActivityDTO';
+import {
+    ActivityDTOFromJSON,
+    ActivityDTOFromJSONTyped,
+    ActivityDTOToJSON,
+    ActivityDTOToJSONTyped,
+} from './ActivityDTO';
+
 /**
  * 
  * @export
@@ -36,12 +44,6 @@ export interface ProfessionalExperienceDTO {
      * @type {string}
      * @memberof ProfessionalExperienceDTO
      */
-    role: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProfessionalExperienceDTO
-     */
     description?: string;
     /**
      * 
@@ -55,15 +57,40 @@ export interface ProfessionalExperienceDTO {
      * @memberof ProfessionalExperienceDTO
      */
     endDate?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProfessionalExperienceDTO
+     */
+    type: ProfessionalExperienceDTOTypeEnum;
+    /**
+     * 
+     * @type {Array<ActivityDTO>}
+     * @memberof ProfessionalExperienceDTO
+     */
+    activities?: Array<ActivityDTO>;
 }
+
+
+/**
+ * @export
+ */
+export const ProfessionalExperienceDTOTypeEnum = {
+    Science: 'Science',
+    TeachingHe: 'TeachingHE',
+    Positions: 'Positions',
+    Others: 'Others'
+} as const;
+export type ProfessionalExperienceDTOTypeEnum = typeof ProfessionalExperienceDTOTypeEnum[keyof typeof ProfessionalExperienceDTOTypeEnum];
+
 
 /**
  * Check if a given object implements the ProfessionalExperienceDTO interface.
  */
 export function instanceOfProfessionalExperienceDTO(value: object): value is ProfessionalExperienceDTO {
     if (!('institution' in value) || value['institution'] === undefined) return false;
-    if (!('role' in value) || value['role'] === undefined) return false;
     if (!('startDate' in value) || value['startDate'] === undefined) return false;
+    if (!('type' in value) || value['type'] === undefined) return false;
     return true;
 }
 
@@ -79,10 +106,11 @@ export function ProfessionalExperienceDTOFromJSONTyped(json: any, ignoreDiscrimi
         
         'id': json['id'] == null ? undefined : json['id'],
         'institution': json['institution'],
-        'role': json['role'],
         'description': json['description'] == null ? undefined : json['description'],
         'startDate': (new Date(json['startDate'])),
         'endDate': json['endDate'] == null ? undefined : (new Date(json['endDate'])),
+        'type': json['type'],
+        'activities': json['activities'] == null ? undefined : ((json['activities'] as Array<any>).map(ActivityDTOFromJSON)),
     };
 }
 
@@ -99,10 +127,11 @@ export function ProfessionalExperienceDTOToJSONTyped(value?: ProfessionalExperie
         
         'id': value['id'],
         'institution': value['institution'],
-        'role': value['role'],
         'description': value['description'],
         'startDate': ((value['startDate']).toISOString().substring(0,10)),
         'endDate': value['endDate'] == null ? undefined : ((value['endDate']).toISOString().substring(0,10)),
+        'type': value['type'],
+        'activities': value['activities'] == null ? undefined : ((value['activities'] as Array<any>).map(ActivityDTOToJSON)),
     };
 }
 

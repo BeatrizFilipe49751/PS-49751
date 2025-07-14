@@ -41,6 +41,12 @@ export interface ThesisDTO {
     title: string;
     /**
      * 
+     * @type {Date}
+     * @memberof ThesisDTO
+     */
+    date: Date;
+    /**
+     * 
      * @type {Array<SupervisorDTO>}
      * @memberof ThesisDTO
      */
@@ -52,6 +58,7 @@ export interface ThesisDTO {
  */
 export function instanceOfThesisDTO(value: object): value is ThesisDTO {
     if (!('title' in value) || value['title'] === undefined) return false;
+    if (!('date' in value) || value['date'] === undefined) return false;
     if (!('supervisors' in value) || value['supervisors'] === undefined) return false;
     return true;
 }
@@ -68,6 +75,7 @@ export function ThesisDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         
         'id': json['id'] == null ? undefined : json['id'],
         'title': json['title'],
+        'date': (new Date(json['date'])),
         'supervisors': ((json['supervisors'] as Array<any>).map(SupervisorDTOFromJSON)),
     };
 }
@@ -85,6 +93,7 @@ export function ThesisDTOToJSONTyped(value?: ThesisDTO | null, ignoreDiscriminat
         
         'id': value['id'],
         'title': value['title'],
+        'date': ((value['date']).toISOString().substring(0,10)),
         'supervisors': ((value['supervisors'] as Array<any>).map(SupervisorDTOToJSON)),
     };
 }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.springframework.stereotype.Service
 import ps.project.domain.*
-import ps.project.domain.activity.ActivityDTO
 import ps.project.domain.author.AuthorDTO
 import ps.project.domain.distinction.DistinctionDTO
 import ps.project.domain.education.*
@@ -13,7 +12,6 @@ import ps.project.domain.identifier.IdentifierDTO
 import ps.project.domain.identifier.IdentifierType
 import ps.project.domain.language.LanguageDTO
 import ps.project.domain.production.ThesisDTO
-import ps.project.domain.profExp.ProfessionalExperienceDTO
 import ps.project.domain.project.FundingType
 import ps.project.domain.project.ProjectDTO
 import ps.project.mapping.xml.lattes.*
@@ -24,7 +22,8 @@ import java.time.LocalDate
 class LattesMapper(
     private val productionMapper: LattesProductionMapper,
     private val contactsMapper: LattesContactsMapper,
-    private val activityMapper: LattesActivityMapper
+    private val activityMapper: LattesActivityMapper,
+    private val profExpMapper: LattesProfExpMapper
 ) : CvMapper {
     override fun supports(source: String): Boolean {
         return source.equals("lattes", ignoreCase = true)
@@ -51,8 +50,8 @@ class LattesMapper(
             websites = contacts.websites,
             projects = extractProjects(data),
             productions = productionMapper.extractProductions(cv),
-            profExp = extractProfExp(xmlString),
             activities = activityMapper.extractActivities(cv),
+            profExp = profExpMapper.extractProfExperiences(cv),
             authors = extractAuthors(data)
         )
     }
@@ -159,16 +158,6 @@ class LattesMapper(
                 )
             }
         }
-    }
-
-    private fun extractProfExp(xmlString: String): List<ProfessionalExperienceDTO> { // ATUACOES-PROFISSIONAIS
-        return emptyList()
-        TODO("Not yet implemented")
-    }
-
-    private fun extractActivities(xmlString: String): List<ActivityDTO> {
-        return emptyList()
-        TODO("Not yet implemented")
     }
 
     private fun extractAuthors(data: GeneralData?): List<AuthorDTO> {

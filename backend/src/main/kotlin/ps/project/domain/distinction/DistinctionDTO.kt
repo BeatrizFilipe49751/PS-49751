@@ -11,7 +11,7 @@ data class DistinctionDTO(
 ) {
     fun toEntity(user: User) = Distinction (
         user = user,
-        type = type,
+        type = type.name,
         name = name,
         year = year,
         promotingEntity = promotingEntity

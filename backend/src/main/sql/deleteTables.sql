@@ -53,6 +53,10 @@ DROP TABLE IF EXISTS Activity CASCADE;
 -- ======================
 -- PROFESSIONAL EXPERIENCE
 -- ======================
+DROP TABLE IF EXISTS Science cascade;
+DROP TABLE IF EXISTS Teaching_HE cascade;
+DROP TABLE IF EXISTS Positions cascade;
+DROP TABLE IF EXISTS Others cascade;
 DROP TABLE IF EXISTS Professional_Experience CASCADE;
 
 -- ======================

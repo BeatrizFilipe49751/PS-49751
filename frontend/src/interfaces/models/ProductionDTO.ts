@@ -134,6 +134,7 @@ export const ProductionDTOTypeEnum = {
     Patent: 'PATENT',
     ResearchTechnique: 'RESEARCH_TECHNIQUE',
     Software: 'SOFTWARE',
+    Thesis: 'THESIS',
     OtherOutput: 'OTHER_OUTPUT'
 } as const;
 export type ProductionDTOTypeEnum = typeof ProductionDTOTypeEnum[keyof typeof ProductionDTOTypeEnum];

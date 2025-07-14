@@ -51,7 +51,7 @@ export class CvControllerApi extends runtime.BaseAPI {
 
     /**
      */
-    async getCvRaw(requestParameters: GetCvRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async getCvRaw(requestParameters: GetCvRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CvDTO>> {
         if (requestParameters['authorization'] == null) {
             throw new runtime.RequiredError(
                 'authorization',
@@ -77,12 +77,12 @@ export class CvControllerApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => CvDTOFromJSON(jsonValue));
     }
 
     /**
      */
-    async getCv(requestParameters: GetCvRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+    async getCv(requestParameters: GetCvRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CvDTO> {
         const response = await this.getCvRaw(requestParameters, initOverrides);
         return await response.value();
     }

@@ -113,12 +113,6 @@ import {
 export interface CvDTO {
     /**
      * 
-     * @type {number}
-     * @memberof CvDTO
-     */
-    id?: number;
-    /**
-     * 
      * @type {string}
      * @memberof CvDTO
      */
@@ -233,7 +227,6 @@ export function CvDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): CvD
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
         'summary': json['summary'] == null ? undefined : json['summary'],
         'identifiers': ((json['identifiers'] as Array<any>).map(IdentifierDTOFromJSON)),
         'languages': ((json['languages'] as Array<any>).map(LanguageDTOFromJSON)),
@@ -262,7 +255,6 @@ export function CvDTOToJSONTyped(value?: CvDTO | null, ignoreDiscriminator: bool
 
     return {
         
-        'id': value['id'],
         'summary': value['summary'],
         'identifiers': ((value['identifiers'] as Array<any>).map(IdentifierDTOToJSON)),
         'languages': ((value['languages'] as Array<any>).map(LanguageDTOToJSON)),

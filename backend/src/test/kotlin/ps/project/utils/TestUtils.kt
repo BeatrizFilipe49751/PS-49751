@@ -79,7 +79,7 @@ object TestUtils {
         )
     }
 
-    fun createMockWebServer(responseXml: String, port: Int = 8080): MockWebServer {
+    fun createMockWebServer(responseXml: String, port: Int = 3000): MockWebServer {
         val server = MockWebServer()
         server.start(port)
         server.enqueue(

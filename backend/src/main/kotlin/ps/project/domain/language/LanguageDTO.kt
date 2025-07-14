@@ -13,9 +13,9 @@ data class LanguageDTO(
     fun toEntity(user: User) = Language (
         user = user,
         language = language,
-        comprehension = comprehension,
-        reading = reading,
-        speaking = speaking,
-        writing = writing
+        comprehension = comprehension?.name,
+        reading = reading?.name,
+        speaking = speaking?.name,
+        writing = writing?.name
     )
 }

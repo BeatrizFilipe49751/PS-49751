@@ -1,9 +1,8 @@
 import { cvApi } from "./axiosInstances";
 import { routes } from "./apiRoutes";
+import { CvDTO } from "../interfaces/models/CvDTO";
 
 export const sendCvToCienciaVitae = () => cvApi.post(routes.cv.send);
-
-export const updateCv = (cvDTO: any) => cvApi.put(routes.cv.update, cvDTO);
 
 export const importCv = (source: string, file: File) => {
   const formData = new FormData();
@@ -13,3 +12,5 @@ export const importCv = (source: string, file: File) => {
 };
 
 export const getCv = () => cvApi.get(routes.cv.get);
+
+export const putCv = (dto: CvDTO) => cvApi.put(routes.cv.update, dto);

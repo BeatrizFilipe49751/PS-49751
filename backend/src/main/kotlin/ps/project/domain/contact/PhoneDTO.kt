@@ -11,9 +11,9 @@ data class PhoneDTO(
 ) {
     fun toEntity(user: User) = Phone (
         user = user,
-        type = type,
+        type = type.name,
         number = number,
         countryCode = countryCode,
-        device = device
+        device = device.name
     )
 }

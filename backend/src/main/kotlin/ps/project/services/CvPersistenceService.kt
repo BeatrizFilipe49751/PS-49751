@@ -5,8 +5,10 @@ import jakarta.persistence.PersistenceContext
 import org.springframework.stereotype.Service
 import ps.project.domain.CvDTO
 import ps.project.domain.User
+import ps.project.domain.activity.Activity
 import ps.project.domain.activity.ActivityDTO
 import ps.project.domain.activity.ActivityMapper
+import ps.project.domain.associations.ActivityProfExperience
 import ps.project.domain.associations.ProductionAuthor
 import ps.project.domain.associations.ProjectAuthor
 import ps.project.domain.author.Author
@@ -16,6 +18,8 @@ import ps.project.domain.education.Supervisor
 import ps.project.domain.production.Thesis
 import ps.project.domain.production.ProductionDTO
 import ps.project.domain.production.ProductionMapper
+import ps.project.domain.profExp.ProfExpMapper
+import ps.project.domain.profExp.ProfessionalExperienceDTO
 import ps.project.domain.project.ProjectDTO
 import ps.project.repository.*
 import ps.project.repository.ProductionRepository
@@ -39,6 +43,7 @@ class CvPersistenceService(
     private val authorRepository: AuthorRepository,
     private val projectAuthorRepository: ProjectAuthorRepository,
     private val productionAuthorRepository: ProductionAuthorRepository,
+    private val activityProfExperienceRepository: ActivityProfExperienceRepository
 ) {
     @PersistenceContext
     private lateinit var entityManager: EntityManager
@@ -52,14 +57,17 @@ class CvPersistenceService(
         saveEntities(cv.emails, { it.toEntity(user) }, emailRepository::saveAll)
         saveEntities(cv.phones, { it.toEntity(user) }, phoneRepository::saveAll)
         saveEntities(cv.websites, { it.toEntity(user) }, websiteRepository::saveAll)
-        saveEntities(cv.profExp, { it.toEntity(user) }, profExpRepository::saveAll)
         importActivities(cv.activities, user)
+        importProfExp(cv.profExp, user)
         saveEntities(cv.authors, { it.toEntity(user) }, authorRepository::saveAll)
         clearManager()
         importProjects(cv.projects, user)
         clearManager()
         importProductions(cv.productions, user)
         clearManager()
+    }
+
+    fun updateCvFromDto(cv: CvDTO, user: User) {
     }
 
     private fun clearManager() {
@@ -100,11 +108,28 @@ class CvPersistenceService(
         supervisorRepository.saveAll(supervisorEntities)
     }
 
-    private fun importActivities(activities: List<ActivityDTO>, user: User) {
-        activities.forEach { activity ->
+    private fun importActivities(activities: List<ActivityDTO>, user: User): List<Activity> {
+        return activities.mapNotNull { activity ->
             val activityEntity = ActivityMapper.toEntity(activity, user)
-            if (activityEntity != null) {
-                activityRepository.save(activityEntity)
+            activityEntity?.let { savedEntity ->
+                activityRepository.save(savedEntity)
+            }
+        }
+    }
+
+    private fun importProfExp(profExp: List<ProfessionalExperienceDTO>, user: User) {
+        profExp.forEach { profExpDTO ->
+            val activities = profExpDTO.activities?.let { importActivities(it, user) }
+            val profExpEntity = ProfExpMapper.toEntity(profExpDTO, user)?.let { profExpRepository.save(it) }
+            if (activities != null && profExpEntity != null) {
+                activities.forEach { activity ->
+                    activityProfExperienceRepository.save(
+                        ActivityProfExperience(
+                            activity = activity,
+                            profExperience = profExpEntity
+                        )
+                    )
+                }
             }
         }
     }

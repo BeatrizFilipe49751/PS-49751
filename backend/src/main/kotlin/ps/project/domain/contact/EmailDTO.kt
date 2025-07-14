@@ -9,7 +9,7 @@ data class EmailDTO(
 ) {
     fun toEntity(user: User) = Email (
         user = user,
-        type = type,
+        type = type.name,
         address = address
     )
 }

@@ -13,7 +13,7 @@ data class AddressDTO(
 ) {
     fun toEntity(user: User) = Address (
         user = user,
-        type = type,
+        type = type.name,
         address = address,
         zipCode = zipCode,
         locality = locality,

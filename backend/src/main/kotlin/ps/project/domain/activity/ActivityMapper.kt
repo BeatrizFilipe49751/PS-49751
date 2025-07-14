@@ -39,13 +39,13 @@ object ActivityMapper {
                 user = user,
                 title = dto.title,
                 date = dto.date,
-                institution = dto.institution,
+                endDate = dto.endDate,
             )
             ActivityType.Event -> Event(
                 user = user,
                 title = dto.title,
                 date = dto.date,
-                endDate = dto.endDate
+                institution = dto.institution,
             )
         }
     }
@@ -89,14 +89,14 @@ object ActivityMapper {
                 type = ActivityType.Consulting,
                 title = activity.title,
                 date = activity.date,
-                institution = activity.institution
+                endDate = activity.endDate,
             )
             is Event -> ActivityDTO(
                 id = activity.id,
                 type = ActivityType.Event,
                 title = activity.title,
                 date = activity.date,
-                endDate = activity.endDate
+                institution = activity.institution
             )
             else -> null
         }

@@ -11,7 +11,7 @@ data class SupervisorDTO(
             thesisId = thesis.id,
             name = name
         ),
-        role = role,
+        role = role.name,
         thesis = thesis
     )
 }

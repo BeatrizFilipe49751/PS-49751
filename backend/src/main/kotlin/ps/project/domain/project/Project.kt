@@ -34,9 +34,7 @@ data class Project(
     val description: String?,
 
     @Column(name = "funding_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    @ColumnTransformer(write = "?::funding_type")
-    val fundingType: FundingType,
+    val fundingType: String,
 
     @Column(nullable = true)
     val identifier: String?,
@@ -45,7 +43,5 @@ data class Project(
     val role: String?,
 
     @Column(nullable = true)
-    @Enumerated(EnumType.STRING)
-    @ColumnTransformer(write = "?::project_state")
-    val state: ProjectState?,
+    val state: String?,
 )

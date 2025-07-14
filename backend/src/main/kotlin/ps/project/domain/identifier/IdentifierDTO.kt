@@ -9,6 +9,6 @@ data class IdentifierDTO(
     fun toEntity(user: User) = Identifier (
         user = user,
         id = id,
-        type = type
+        type = type.name
     )
 }

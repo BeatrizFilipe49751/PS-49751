@@ -3,7 +3,6 @@ package ps.project.domain.education
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
-import org.hibernate.annotations.ColumnTransformer
 import ps.project.domain.User
 import ps.project.domain.production.Thesis
 import java.time.LocalDate
@@ -20,10 +19,8 @@ data class Education (
     @JsonBackReference
     val user: User,
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "degree", nullable = false)
-    @ColumnTransformer(write = "?::education_degree")
-    val degree: EducationDegree,
+    val degree: String,
 
     @Column(name = "course", nullable = false)
     val course: String = "",
@@ -34,10 +31,8 @@ data class Education (
     @Column(name = "classification", nullable = true)
     val classification: String?,
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    @ColumnTransformer(write = "?::education_status")
-    val status: EducationStatus,
+    val status: String,
 
     @Column(name = "course_code", nullable = true)
     val courseCode: String?,

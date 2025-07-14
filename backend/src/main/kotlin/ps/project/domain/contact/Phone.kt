@@ -17,10 +17,8 @@ data class Phone(
     @JsonBackReference
     val user: User,
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @ColumnTransformer(write = "?::contact_type")
-    val type: ContactType,
+    val type: String,
 
     @Column(nullable = false)
     val number: Int,
@@ -28,8 +26,6 @@ data class Phone(
     @Column(name = "country_code", nullable = true)
     val countryCode: Int? = null,
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @ColumnTransformer(write = "?::phone_device")
-    val device: PhoneDevice,
+    val device: String,
 )

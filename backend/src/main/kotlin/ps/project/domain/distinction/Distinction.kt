@@ -2,7 +2,6 @@ package ps.project.domain.distinction
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
-import org.hibernate.annotations.ColumnTransformer
 import ps.project.domain.User
 
 @Entity
@@ -17,10 +16,8 @@ data class Distinction(
     @JsonBackReference
     val user: User,
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @ColumnTransformer(write = "?::distinction_type")
-    val type: DistinctionType,
+    val type: String,
 
     @Column(nullable = false)
     val name: String,

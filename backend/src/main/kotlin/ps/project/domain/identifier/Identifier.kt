@@ -2,7 +2,6 @@ package ps.project.domain.identifier
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
-import org.hibernate.annotations.ColumnTransformer
 import ps.project.domain.User
 
 @Entity
@@ -17,8 +16,6 @@ data class Identifier(
     @JsonBackReference
     val user: User,
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
-    @ColumnTransformer(write = "?::identifier_type")
-    val type: IdentifierType
+    val type: String
 )
