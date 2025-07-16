@@ -43,7 +43,7 @@ data class Education (
     @Column(name = "end_date", nullable = false)
     val endDate: LocalDate = LocalDate.MIN,
 
-    @OneToOne(mappedBy = "education", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToOne(mappedBy = "education")
     @JsonManagedReference
     val thesis: Thesis? = null
 )

@@ -8,7 +8,8 @@ import java.time.LocalDate
 @Entity
 @Table(name = "PATENT")
 class Patent(
+    id: Int,
     title: String,
     date: LocalDate,
     user: User
-) : Production(title = title, date = date, user = user)
+) : Production(id = id, title = title, date = date, user = user)

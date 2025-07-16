@@ -13,6 +13,7 @@ data class ThesisDTO(
 ) {
     fun toEntity(user: User, education: Education): Thesis {
         return Thesis (
+            id = id ?: 0,
             title = title,
             date = date,
             education = education,

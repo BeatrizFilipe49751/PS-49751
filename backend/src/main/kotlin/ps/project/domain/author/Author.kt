@@ -14,7 +14,7 @@ data class Author(
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference
-    val user: User,
+    val user: User? = null,
 
     @Column(name = "citation_name", nullable = false)
     val citationName: String,

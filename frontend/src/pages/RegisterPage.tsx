@@ -76,7 +76,7 @@ export default function RegisterPage() {
             onSubmit={handleRegister}
             side="left"
             sideTitle="Already have an account?"
-            sideText="Log in to manage and export your scientific CV."
+            sideText="Log in to import, manage and export your scientific CV."
             sideButtonText="Login"
             sideButtonPath="/login"
         />

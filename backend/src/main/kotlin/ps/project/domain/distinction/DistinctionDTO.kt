@@ -10,6 +10,7 @@ data class DistinctionDTO(
     val promotingEntity: String?
 ) {
     fun toEntity(user: User) = Distinction (
+        id = id ?: 0,
         user = user,
         type = type.name,
         name = name,

@@ -6,11 +6,12 @@ import java.time.LocalDate
 
 @Entity
 class Others (
+    id: Int,
     user: User,
     institution: String,
     description: String? = null,
     startDate: LocalDate = LocalDate.MIN,
     endDate: LocalDate? = null
 ): ProfessionalExperience(
-    user = user, institution = institution, description = description, startDate = startDate, endDate = endDate
+    id = id, user = user, institution = institution, description = description, startDate = startDate, endDate = endDate
 )

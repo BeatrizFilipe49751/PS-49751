@@ -68,6 +68,7 @@ class CvPersistenceService(
     }
 
     fun updateCvFromDto(cv: CvDTO, user: User) {
+        saveCvFromDto(cv, user)
     }
 
     private fun clearManager() {
@@ -140,7 +141,7 @@ class CvPersistenceService(
             projectRepository.save(proj)
             project.authors.forEach { name ->
                 val author = authorRepository.findByCitationName(name) ?:
-                authorRepository.save(Author(user = user, citationName = name))
+                authorRepository.save(Author(citationName = name))
                 val projectAuthor = ProjectAuthor(
                     project = proj,
                     author = author
@@ -157,7 +158,7 @@ class CvPersistenceService(
                 productionRepository.save(prod)
                 production.authors.forEach { name ->
                     val author = authorRepository.findByCitationName(name) ?:
-                    authorRepository.save(Author(user = user, citationName = name))
+                    authorRepository.save(Author(citationName = name))
                     val productionAuthor = ProductionAuthor(
                         production = prod,
                         author = author

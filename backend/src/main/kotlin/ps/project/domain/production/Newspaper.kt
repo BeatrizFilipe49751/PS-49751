@@ -8,6 +8,7 @@ import java.time.LocalDate
 @Entity
 @Table(name = "NEWSPAPER")
 class Newspaper(
+    id: Int,
     title: String,
     date: LocalDate,
     user: User,
@@ -18,4 +19,4 @@ class Newspaper(
     volume: String?,
     url: String?,
     val issn: String?
-) : Article(title, date, user, doi, pageFrom, pageTo, secondaryTitle, volume, url)
+) : Article(id, title, date, user, doi, pageFrom, pageTo, secondaryTitle, volume, url)

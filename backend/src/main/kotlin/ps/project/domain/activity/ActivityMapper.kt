@@ -8,6 +8,7 @@ object ActivityMapper {
     fun toEntity(dto: ActivityDTO, user: User): Activity? {
         return when (dto.type) {
             ActivityType.AcademicJury -> AcademicJury(
+                id = dto.id ?: 0,
                 user = user,
                 title = dto.title,
                 date = dto.date,
@@ -17,6 +18,7 @@ object ActivityMapper {
                 degree = dto.degree!!.name
             )
             ActivityType.Supervision -> Supervision(
+                id = dto.id ?: 0,
                 user = user,
                 title = dto.title,
                 date = dto.date,
@@ -28,6 +30,7 @@ object ActivityMapper {
                 degree = dto.degree!!.name
             )
             ActivityType.SubjectTaught -> SubjectTaught(
+                id = dto.id ?: 0,
                 user = user,
                 title = dto.title,
                 date = dto.date,
@@ -36,12 +39,14 @@ object ActivityMapper {
                 endDate = dto.endDate,
             )
             ActivityType.Consulting -> Consulting(
+                id = dto.id ?: 0,
                 user = user,
                 title = dto.title,
                 date = dto.date,
                 endDate = dto.endDate,
             )
             ActivityType.Event -> Event(
+                id = dto.id ?: 0,
                 user = user,
                 title = dto.title,
                 date = dto.date,

@@ -118,7 +118,7 @@ class CvExportService(
 
     private fun sendPhonesToCienciaVitae(phones: List<Phone>, baseUrl: String) {
         phones.forEach {
-            val device = PhoneDevice.valueOf(it.type)
+            val device = PhoneDevice.valueOf(it.device)
             val type = ContactType.valueOf(it.type)
             val payload = PhoneXml(
                 usageType = CodeValueXml(type.code, type.name),

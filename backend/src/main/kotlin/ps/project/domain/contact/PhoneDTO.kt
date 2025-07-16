@@ -10,6 +10,7 @@ data class PhoneDTO(
     val device: PhoneDevice,
 ) {
     fun toEntity(user: User) = Phone (
+        id = id ?: 0,
         user = user,
         type = type.name,
         number = number,

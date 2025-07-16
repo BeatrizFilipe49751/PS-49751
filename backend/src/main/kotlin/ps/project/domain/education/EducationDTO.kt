@@ -18,6 +18,7 @@ data class EducationDTO(
 ) {
     fun toEntity(user: User) : Education {
         return Education(
+            id = id ?: 0,
             user = user,
             degree = degree.name,
             course = course,
@@ -26,7 +27,7 @@ data class EducationDTO(
             status = status.name,
             courseCode = courseCode,
             startDate = startDate,
-            endDate = endDate
+            endDate = endDate,
         )
     }
 }

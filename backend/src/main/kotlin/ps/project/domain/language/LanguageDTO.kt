@@ -11,6 +11,7 @@ data class LanguageDTO(
     val writing: LanguageLevel?
 ) {
     fun toEntity(user: User) = Language (
+        id = id ?: 0,
         user = user,
         language = language,
         comprehension = comprehension?.name,

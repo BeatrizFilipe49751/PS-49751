@@ -8,6 +8,7 @@ import java.time.LocalDate
 @Entity
 @Table(name = "EDITED_BOOK")
 class EditedBook(
+    id: Int,
     title: String,
     date: LocalDate,
     user: User,
@@ -16,4 +17,4 @@ class EditedBook(
     val isbn: String?,
     val volume: String?,
     val url: String?
-) : Production(title = title, date = date, user = user)
+) : Production(id = id, title = title, date = date, user = user)

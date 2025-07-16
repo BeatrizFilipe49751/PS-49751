@@ -9,6 +9,7 @@ import java.time.LocalDate
 @Entity
 @Table(name = "Subject_Taught")
 class SubjectTaught(
+    id: Int,
     user: User,
     title: String,
     date: LocalDate,
@@ -18,4 +19,4 @@ class SubjectTaught(
     val courseCode: String? = null,
     @Column(name = "end_date")
     val endDate: LocalDate? = null,
-) : Activity(user = user, title = title, date = date)
+) : Activity(id = id, user = user, title = title, date = date)

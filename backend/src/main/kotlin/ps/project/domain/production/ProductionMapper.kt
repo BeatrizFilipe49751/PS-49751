@@ -8,6 +8,7 @@ object ProductionMapper {
     fun toEntity(dto: ProductionDTO, user: User): Production? {
         return when (dto.type) {
             ProductionType.BOOK -> Book(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user,
@@ -17,6 +18,7 @@ object ProductionMapper {
                 url = dto.url
             )
             ProductionType.EDITED_BOOK -> EditedBook(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user,
@@ -26,6 +28,7 @@ object ProductionMapper {
                 url = dto.url
             )
             ProductionType.JOURNAL_ARTICLE -> Journal(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user,
@@ -38,6 +41,7 @@ object ProductionMapper {
                 issn = dto.issn
             )
             ProductionType.MAGAZINE_ARTICLE -> Magazine(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user,
@@ -50,6 +54,7 @@ object ProductionMapper {
                 issn = dto.issn
             )
             ProductionType.NEWSPAPER_ARTICLE -> Newspaper(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user,
@@ -62,6 +67,7 @@ object ProductionMapper {
                 issn = dto.issn
             )
             ProductionType.TRANSLATION -> Translation(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user,
@@ -73,6 +79,7 @@ object ProductionMapper {
                 url = dto.url
             )
             ProductionType.BOOK_CHAPTER -> BookChapter(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user,
@@ -85,6 +92,7 @@ object ProductionMapper {
                 isbn = dto.isbn
             )
             ProductionType.SOFTWARE -> Software(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user,
@@ -94,6 +102,7 @@ object ProductionMapper {
                 doi = dto.doi
             )
             ProductionType.REPORT -> Report(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user,
@@ -102,17 +111,20 @@ object ProductionMapper {
                 doi = dto.doi
             )
             ProductionType.PATENT -> Patent(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user
             )
             ProductionType.RESEARCH_TECHNIQUE -> ResearchTechnique(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user,
                 doi = dto.doi
             )
             ProductionType.OTHER_OUTPUT -> Other(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user,
@@ -120,6 +132,7 @@ object ProductionMapper {
                 url = dto.url
             )
             ProductionType.WEBSITE -> WebsiteProd(
+                id = dto.id ?: 0,
                 title = dto.title,
                 date = dto.date,
                 user = user,

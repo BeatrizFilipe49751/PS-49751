@@ -5,16 +5,17 @@ import ps.project.domain.User
 object ProfExpMapper {
     /* ------------  DTO ➜ Entity  ------------ */
     fun toEntity(dto: ProfessionalExperienceDTO, user: User): ProfessionalExperience? {
+        val id = dto.id ?: 0
         val institution = dto.institution
         val description = dto.description
         val startDate = dto.startDate
         val endDate = dto.endDate
 
         return when (dto.type) {
-            ProfExpType.Science -> Science(user, institution, description, startDate, endDate)
-            ProfExpType.TeachingHE -> TeachingHE(user, institution, description, startDate, endDate)
-            ProfExpType.Positions -> Positions(user, institution, description, startDate, endDate)
-            ProfExpType.Others -> Others(user, institution, description, startDate, endDate)
+            ProfExpType.Science -> Science(id, user, institution, description, startDate, endDate)
+            ProfExpType.TeachingHE -> TeachingHE(id, user, institution, description, startDate, endDate)
+            ProfExpType.Positions -> Positions(id, user, institution, description, startDate, endDate)
+            ProfExpType.Others -> Others(id, user, institution, description, startDate, endDate)
         }
     }
 
@@ -28,6 +29,7 @@ object ProfExpMapper {
             else -> return null
         }
         return ProfessionalExperienceDTO(
+            id = profExp.id,
             type = type,
             institution = profExp.institution,
             description = profExp.description,

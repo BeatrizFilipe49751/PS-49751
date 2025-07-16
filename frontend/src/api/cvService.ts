@@ -1,6 +1,6 @@
 import { cvApi } from "./axiosInstances";
 import { routes } from "./apiRoutes";
-import { CvDTO } from "../interfaces/models/CvDTO";
+import { CvDTO, instanceOfCvDTO } from "../interfaces/models/CvDTO";
 
 export const sendCvToCienciaVitae = () => cvApi.post(routes.cv.send);
 
@@ -11,6 +11,19 @@ export const importCv = (source: string, file: File) => {
   return cvApi.post(routes.cv.import, formData);
 };
 
-export const getCv = () => cvApi.get(routes.cv.get);
+/**
+ * Strongly‑typed GET /cv
+ *
+ * @returns Promise<CvDTO>
+ */
+export const getCv = async (): Promise<CvDTO> => {
+  const { data } = await cvApi.get<CvDTO>(routes.cv.get);
+
+  if (!instanceOfCvDTO(data)) {
+    throw new Error("Response is not a valid CvDTO");
+  }
+
+  return data;
+};
 
 export const putCv = (dto: CvDTO) => cvApi.put(routes.cv.update, dto);

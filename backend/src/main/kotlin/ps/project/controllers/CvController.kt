@@ -19,7 +19,7 @@ class CvController(private val cvService: CvService) {
         return try {
             val token = authHeader.removePrefix("Bearer ")
             cvService.sendToCienciaVitae(token)
-            ResponseEntity.ok("CV enviado para a CiênciaVitae com sucesso.")
+            ResponseEntity.ok("CV successfully sent to CiênciaVitae.")
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.message)
         }
@@ -33,7 +33,7 @@ class CvController(private val cvService: CvService) {
         return try {
             val token = authHeader.removePrefix("Bearer ")
             cvService.updateCv(token, cvDTO)
-            ResponseEntity.ok("CV atualizado com sucesso.")
+            ResponseEntity.ok("CV successfully updated.")
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.message)
         }
@@ -49,7 +49,7 @@ class CvController(private val cvService: CvService) {
             val token = authHeader.replace("Bearer ", "")
             val cv = cvService.importCv(token, source, file)
             val response = CvImportResponse (
-                message = "CV importado com sucesso da fonte $source.",
+                message = "CV successfully imported from source $source.",
                 id = cv.id,
                 summary = cv.summary,
                 identifiers = cv.identifiers,

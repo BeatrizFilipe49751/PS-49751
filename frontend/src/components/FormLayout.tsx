@@ -1,4 +1,3 @@
-// src/components/FormLayout.tsx
 import "./FormLayout.css";
 import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,16 +16,16 @@ interface FormLayoutProps {
 }
 
 export default function FormLayout({
-                                       formTitle,
-                                       formFields,
-                                       formButtonText,
-                                       onSubmit,
-                                       side,
-                                       sideTitle,
-                                       sideText,
-                                       sideButtonText,
-                                       sideButtonPath
-                                   }: FormLayoutProps) {
+    formTitle,
+    formFields,
+    formButtonText,
+    onSubmit,
+    side,
+    sideTitle,
+    sideText,
+    sideButtonText,
+    sideButtonPath
+}: FormLayoutProps) {
     const navigate = useNavigate();
 
     return (

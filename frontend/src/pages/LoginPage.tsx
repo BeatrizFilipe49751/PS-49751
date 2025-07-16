@@ -62,7 +62,7 @@ export default function LoginPage() {
             onSubmit={handleLogin}
             side="right"
             sideTitle="Don't have an account?"
-            sideText="Register now to manage and export your scientific CV easily."
+            sideText="Register now to import, manage and export your scientific CV easily."
             sideButtonText="Register"
             sideButtonPath="/register"
         />

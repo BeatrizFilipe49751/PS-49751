@@ -8,6 +8,7 @@ import java.time.LocalDate
 @Entity
 @Table(name = "ACADEMIC_JURY")
 class AcademicJury(
+    id: Int,
     user: User,
     title: String,
     date: LocalDate,
@@ -16,4 +17,4 @@ class AcademicJury(
     val institution: String? = null,
     val course: String? = null,
     val degree: String
-) : Activity(user = user, title = title, date = date)
+) : Activity(id = id, user = user, title = title, date = date)

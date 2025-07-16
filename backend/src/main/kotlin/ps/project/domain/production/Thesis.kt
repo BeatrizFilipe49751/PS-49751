@@ -11,6 +11,7 @@ import java.time.LocalDate
 @Entity
 @Table(name = "THESIS")
 class Thesis(
+    id: Int,
     title: String,
     date: LocalDate,
     user: User,
@@ -19,9 +20,9 @@ class Thesis(
     @JoinColumn(name = "education_id", unique = true, nullable = false)
     @JsonBackReference
     val education: Education
-) : Production(title = title, date = date, user = user) {
+) : Production(id = id, title = title, date = date, user = user) {
 
-    @OneToMany(mappedBy = "thesis", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "thesis")
     @JsonManagedReference
     val supervisors: MutableList<Supervisor> = mutableListOf()
 }

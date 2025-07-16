@@ -6,9 +6,10 @@ import java.time.LocalDate
 
 @Entity
 class Event(
+    id: Int,
     user: User,
     title: String,
     date: LocalDate,
 
     val institution: String? = null,
-) : Activity(user = user, title = title, date = date)
+) : Activity(id = id, user = user, title = title, date = date)

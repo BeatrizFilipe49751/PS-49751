@@ -8,6 +8,7 @@ import java.time.LocalDate
 @Entity
 @Table(name = "SOFTWARE")
 class Software(
+    id: Int,
     title: String,
     date: LocalDate,
     user: User,
@@ -16,4 +17,4 @@ class Software(
     val version: String?,
     val platform: String?,
     val doi: String?
-) : Production(title = title, date = date, user = user)
+) : Production(id = id, title = title, date = date, user = user)

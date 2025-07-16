@@ -12,6 +12,7 @@ data class AddressDTO(
     val country: String
 ) {
     fun toEntity(user: User) = Address (
+        id = id ?: 0,
         user = user,
         type = type.name,
         address = address,

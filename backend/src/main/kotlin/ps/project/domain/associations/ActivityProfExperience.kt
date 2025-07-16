@@ -11,7 +11,7 @@ import ps.project.domain.profExp.ProfessionalExperience
 
 @Entity
 @IdClass(ActivityProfExperienceId::class)
-@Table(name = "Activity_ProfessionalExperience")
+@Table(name = "activity_professionalexperience")
 data class ActivityProfExperience(
     @Id
     @ManyToOne

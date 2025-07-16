@@ -8,6 +8,7 @@ data class WebsiteDTO(
     val url: String
 ) {
     fun toEntity(user: User) = Website (
+        id = id ?: 0,
         user = user,
         type = type.name,
         url = url

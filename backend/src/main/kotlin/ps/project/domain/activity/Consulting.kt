@@ -7,10 +7,11 @@ import java.time.LocalDate
 
 @Entity
 class Consulting(
+    id: Int,
     user: User,
     title: String,
     date: LocalDate,
 
     @Column(name = "end_date")
     val endDate: LocalDate? = null,
-) : Activity(user = user, title = title, date = date)
+) : Activity(id = id, user = user, title = title, date = date)

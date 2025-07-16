@@ -8,9 +8,10 @@ import java.time.LocalDate
 @Entity
 @Table(name = "RESEARCH_TECHNIQUE")
 class ResearchTechnique(
+    id: Int,
     title: String,
     date: LocalDate,
     user: User,
 
     val doi: String?
-) : Production(title = title, date = date, user = user)
+) : Production(id = id, title = title, date = date, user = user)

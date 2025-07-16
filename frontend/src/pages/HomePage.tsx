@@ -9,7 +9,7 @@ export default function HomePage() {
         {
             iconPath: "/assets/import-icon.png",
             title: "Import your CV",
-            description: "Import your CV data from different sources to start managing it centrally.",
+            description: "Import your CV data from a different source to start managing it centrally.",
             path: "/import",
         },
         {

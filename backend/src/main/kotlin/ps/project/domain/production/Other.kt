@@ -8,10 +8,11 @@ import java.time.LocalDate
 @Entity
 @Table(name = "OTHER")
 class Other(
+    id: Int,
     title: String,
     date: LocalDate,
     user: User,
 
     val description: String?,
     val url: String?
-) : Production(title = title, date = date, user = user)
+) : Production(id = id, title = title, date = date, user = user)

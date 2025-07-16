@@ -79,7 +79,7 @@ class UserService(
         return if (nodeList.length > 0) {
             nodeList.item(0).textContent
         } else {
-            throw Exception("Nome não encontrado na resposta da CiênciaVitae.")
+            throw Exception("Name not found in CiênciaVitae response.")
         }
     }
 }

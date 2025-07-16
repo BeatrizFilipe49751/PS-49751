@@ -1,4 +1,3 @@
-// src/api/userService.ts
 import { userApi } from "./axiosInstances";
 import { routes } from "./apiRoutes";
 

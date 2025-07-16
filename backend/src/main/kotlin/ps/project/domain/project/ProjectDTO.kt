@@ -17,6 +17,7 @@ data class ProjectDTO(
     val authors: List<String>
 ) {
     fun toEntity(user: User) = Project (
+        id = id ?: 0,
         user = user,
         title = title,
         institution = institution,

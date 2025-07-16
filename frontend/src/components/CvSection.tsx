@@ -1,5 +1,5 @@
 import React from 'react';
-import './CvSection.css'; // <- Make sure this import exists or styles are global
+import './CvSection.css';
 
 interface CvSectionProps {
     id: string;

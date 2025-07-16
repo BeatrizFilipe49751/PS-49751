@@ -3,6 +3,7 @@
     padding: 2rem;
     display: flex;
     justify-content: center;
+    position: relative;
 }
 
 .cv-content-wrapper {
@@ -27,4 +28,69 @@
 .cv-subfields p,
 .cv-entry > div {
     margin-bottom: 0.5rem;
+}
+
+.cv-field input[type="text"],
+.cv-field select,
+.cv-field textarea {
+    width: 100%;
+    padding: 0.3rem 0.4rem;
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.4rem;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.cv-field textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.edit-action-buttons {
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.edit-toggle-button,
+.save-button {
+    background-color: #ffffff;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    margin-left: 20px;
+}
+
+.cancel-button {
+    background-color: #ffffff;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-left: 20px;
+}
+
+.edit-toggle-button:hover,
+.cancel-button:hover,
+.save-button:hover {
+    background-color: #f0f0f0;
+}
+
+.save-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }

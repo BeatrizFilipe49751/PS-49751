@@ -73,14 +73,16 @@ class CvService(
         if (!user.hasCvData()) {
             throw IllegalArgumentException("The user does not have CV data to update.")
         }
-        persistenceService.updateCvFromDto(cvDTO, user)
+        val userUpdated = importSummary(user, cvDTO.summary)
+        persistenceService.updateCvFromDto(cvDTO, userUpdated)
     }
 
     @Transactional
     fun importCv(token: String, source: String, file: MultipartFile) : User {
         val user = getUserFromToken(token)
         val cvDTO = parser.parse(file, source)
-        persistenceService.saveCvFromDto(cvDTO, user)
+        val userUpdated = importSummary(user, cvDTO.summary)
+        persistenceService.saveCvFromDto(cvDTO, userUpdated)
         return userRepository.findById(user.id)
             .orElseThrow { IllegalArgumentException("User not found.") }
     }
@@ -90,9 +92,15 @@ class CvService(
         return toDTO(user)
     }
 
+    private fun importSummary(user: User, summary: String?): User {
+        val userUpdated = user.copy(summary = summary)
+        userRepository.save(userUpdated)
+        return userUpdated
+    }
+
     private fun getUserFromToken(token: String): User {
         return userTokenRepository.findByToken(token)
-            .orElseThrow { IllegalArgumentException("Token inválido ou expirado.") }
+            .orElseThrow { IllegalArgumentException("Expired or invalid token.") }
             .user
     }
 

@@ -6,6 +6,7 @@ import java.time.LocalDate
 
 @Entity
 class Supervision(
+    id: Int,
     user: User,
     title: String,
     date: LocalDate,
@@ -16,4 +17,4 @@ class Supervision(
     val course: String? = null,
     val courseCode: String? = null,
     val degree: String,
-) : Activity(user = user, title = title, date = date)
+) : Activity(id = id, user = user, title = title, date = date)

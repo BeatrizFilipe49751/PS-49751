@@ -6,7 +6,8 @@ data class AuthorDTO(
     val id: Int? = null,
     val citationName: String
 ) {
-    fun toEntity(user: User) = Author (
+    fun toEntity(user: User?) = Author (
+        id = id ?: 0,
         user = user,
         citationName = citationName
     )

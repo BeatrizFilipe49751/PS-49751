@@ -11,6 +11,7 @@ import java.time.LocalDate
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "ARTICLE")
 open class Article(
+    id: Int,
     title: String,
     date: LocalDate,
     user: User,
@@ -21,4 +22,4 @@ open class Article(
     val secondaryTitle: String?,
     val volume: String?,
     val url: String?
-) : Production(title = title, date = date, user = user)
+) : Production(id = id, title = title, date = date, user = user)

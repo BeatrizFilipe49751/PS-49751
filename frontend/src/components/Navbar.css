@@ -33,7 +33,7 @@
     background-color: #7d9b76;
     color: #20232a;
     padding: 0.5rem 1rem;
-    border-radius: 999px; /* fully rounded */
+    border-radius: 999px;
     font-weight: bold;
     text-decoration: none;
     transition: background-color 0.3s ease;

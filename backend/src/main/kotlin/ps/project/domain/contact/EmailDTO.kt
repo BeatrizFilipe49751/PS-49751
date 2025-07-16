@@ -8,6 +8,7 @@ data class EmailDTO(
     val address: String
 ) {
     fun toEntity(user: User) = Email (
+        id = id ?: 0,
         user = user,
         type = type.name,
         address = address
